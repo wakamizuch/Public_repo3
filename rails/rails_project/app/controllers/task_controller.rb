@@ -40,7 +40,7 @@ class TaskController < ApplicationController
   
   def load_task_cards
     
-    tasks = Task.all.order(created_at: :desc).limit(15)
+    tasks = Task.all.order(created_at: :desc).limit(20)
     pp "全てのタスクのロードします"
     pp tasks
     render_success tasks: tasks

@@ -6,6 +6,7 @@
     <!-- -->
     <div class="header">
       <div class="title">
+        <p>{{ this.$store.getters["block/blockedList"] }}</p>
         <p>タスクページ</p>
         <!--<p>ようこそ {{ this.$store.getters.userId }} 番さん</p> -->
       </div>
@@ -52,43 +53,62 @@ export default {
   data() {
     return {
       //fightTaskList: ref(this.$store.getters["fight/fightTaskList"]),
-      taskCards: this.$store.getters.taskCards,
       inputText: "",
       followedList: ref(this.$store.getters.followedList),
     };
   },
   computed: {
+    taskCards() {
+      const blockedList = this.$store.getters["block/blockedList"];
+      const tasks = this.$store.getters.taskCards.filter(function (task) {
+        return !blockedList.includes(task.user_id);
+      });
+      return tasks;
+      //.filter(function (task) {
+      //  return fightTaskList.includes(task.id);
+      //})
+      //this.$store.getters["block/blockedList"].includes(taskCard.user_id)
+    },
+    // blockも同じようにやってみたら良さそう
     fightTaskList() {
       return this.$store.getters["fight/fightTaskList"];
     },
   },
   created() {
+    this.loadBlockedList();
     this.loadTaskCards();
     this.loadFollowedList();
     this.loadFightTaskList();
   },
   methods: {
     async loadFollowedList() {
-      console.log("ロードされました(FollowedList)");
+      //console.log("ロードされました(FollowedList)");
       const userId = this.$store.getters.userId;
       await this.$store.dispatch("loadFollowedList", { userId: userId });
       this.followedList = this.$store.getters.followedList;
     },
     async loadFightTaskList() {
-      console.log("ロードされました(FightTaskList)");
+      //console.log("ロードされました(FightTaskList)");
       const userId = this.$store.getters.userId;
       await this.$store.dispatch("fight/loadFightTaskList", { userId: userId });
       this.fightTaskList = this.$store.getters["fight/fightTaskList"];
     },
+    async loadBlockedList() {
+      console.log("ロードされました(blockedList)");
+      const userId = this.$store.getters.userId;
+      await this.$store.dispatch("block/loadBlockedList", { userId: userId });
+      //this.blockList = this.$store.getters["block/blockTaskList"];
+    },
+
     async loadTaskCards() {
-      console.log("ロードされました(LoadTaskList)");
+    //console.log("ロードされました(LoadTaskList)");
       this.taskCards = await this.$store.dispatch("loadTaskCards", {});
     },
     async createTask() {
       if (!this.inputText) {
         return alert("入力がありません");
       }
-      alert("タスクを作成しました");
+      //alert("タスクを作成しました");
       await this.$store.dispatch("createTask", {
         userId: this.$store.getters.userId,
         text: this.inputText,

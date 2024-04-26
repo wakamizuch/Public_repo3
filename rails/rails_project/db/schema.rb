@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_18_155513) do
+ActiveRecord::Schema.define(version: 2024_04_23_062029) do
+
+  create_table "block_relationships", force: :cascade do |t|
+    t.integer "blocker_id"
+    t.integer "blocked_id"
+    t.boolean "block_now", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "fights", force: :cascade do |t|
     t.integer "user_id"

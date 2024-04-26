@@ -52,6 +52,13 @@
       >
         全投稿をチェック</router-link
       >
+      <button class="box-class-block" v-on:click="change_block(blockFlag)">
+        {{
+          this.$store.getters["block/blockedList"].includes(taskCard.user_id)
+            ? "ブロック中です"
+            : "ブロックする"
+        }}
+      </button>
     </div>
     <div>いいねの数:{{ taskCard.fight_num }}</div>
   </div>
@@ -69,6 +76,9 @@ export default {
       //fightTaskList:fightTaskList,
       fightFlag: this.$store.getters["fight/fightTaskList"].includes(
         this.taskCard.id
+      ),
+      blockFlag: this.$store.getters["block/blockedList"].includes(
+        this.taskCard.userId
       ),
     };
   },
@@ -134,18 +144,18 @@ export default {
       );
       const followed_id = this.taskCard.user_id;
       const follower_id = this.$store.getters.userId;
-      //api
-      //  .post("follow", {
-      //    relation: { follower_id: follower_id, followed_id: followed_id },
-      //  })
-      //  .then(function(){
-      //    this.$store.dispatch("setFollowedList");
-      //  });
       await this.$store.dispatch("follow", { follower_id, followed_id });
-      //this.followedList = this.$store.getters.followedList
-      //.then(function () {
-      //  dispatch("setFollowedList");
-      //});
+    },
+    async change_block() {
+      console.log(
+        this.$store.getters.userId +
+          "と" +
+          this.taskCard.id +
+          "のブロック関係が変化しました"
+      );
+      const blocker_id = this.$store.getters.userId;
+      const blocked_id = this.taskCard.user_id;
+      await this.$store.dispatch("block/block", { blocker_id, blocked_id });
     },
   },
 };
@@ -171,6 +181,9 @@ export default {
     background-color: rgb(178, 238, 220);
     right: 4px;
     bottom: 2px;
+  }
+  .follow {
+    position: relative;
   }
 
   &-text {
@@ -201,16 +214,30 @@ export default {
     border-radius: 5px;
     background-color: beige;
     text-decoration: none;
+    &-block {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+
+      font-size: 10px;
+
+      padding: 2px;
+      border: 2px solid black;
+      border-radius: 5px;
+      background-color: beige;
+      text-decoration: none;
+    }
   }
-  .box-class:hover {
+  .box-class:hover,
+  .box-class-block:hover {
     background-color: rgb(233, 233, 94);
-    right: 4px;
-    bottom: 4px;
+    //right: 4px;
+    //bottom: 4px;
   }
-  &-checkbox:hover {
-    right: 4px;
-    bottom: 4px;
-  }
+  //&-checkbox:hover {
+  //  right: 4px;
+  //  bottom: 4px;
+  //}
   input[type="checkbox"] {
     position: relative;
     width: 16px;

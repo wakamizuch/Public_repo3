@@ -3,7 +3,10 @@ class UserInfo < ApplicationRecord
         # 
     has_many :follower_relationships, class_name: 'Relationship', foreign_key: 'follower_id'
     has_many :followed_relationships, class_name: 'Relationship', foreign_key: 'followed_id'
+    has_many :blocker_relationships, class_name: 'BlockRelationship', foreign_key: 'blocker_id'
+    has_many :blocked_relationships, class_name: 'BlockRelationship', foreign_key: 'blocked_id'
 
+    
     has_many :user_id_relationships, class_name: 'Fight',foreign_key:'user_id'
     
     validates :name, {uniqueness:true}

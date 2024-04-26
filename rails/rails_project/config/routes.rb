@@ -11,16 +11,20 @@ Rails.application.routes.draw do
     post '/login', to: 'user#login'
 
     #task
-    get '/load_task_cards' ,to: 'task#load_task_cards'
+    get '/load_task_cards/:user_id' ,to: 'task#load_task_cards'
+    get '/load_my_task_cards/:user_id', to: 'task#load_my_task_cards'
     post '/task_page', to: 'task#show_all'
     post '/create_task', to: 'task#create'
     post '/update_task_flag', to: 'task#update_task_flag'
-    get '/load_my_task_cards/:user_id', to: 'task#load_my_task_cards'
     post "/updateFightNum" , to: 'task#update_fight_num'
 
     # relation
     get '/get_followed_list/:follower', to: 'relation#index'
     post '/follow', to: 'relation#create'
+
+    # block_relation
+    get '/get_blocked_list/:blocker', to: 'block_relation#index'
+    post '/block', to: 'relation#create'
     
     # fight
     get '/get_fight_task_list/:user_id', to: 'fight#index'
