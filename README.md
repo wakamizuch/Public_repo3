@@ -30,6 +30,9 @@
 4. いいね機能 (いいねしたタスクページへ遷移、またいいねの数のカウント)
    - タスクに対していいね/いいね解除
    - タスクごとにそのタスクのいいね数が表示
+5. ブロック機能
+   - ブロックしたユーザーをタスク一覧表示から削除(非表示)
+   - ブロックされたユーザーはブロックされた事を知らない状態を維持
 
 ## 動作確認(30s)
 
@@ -52,6 +55,8 @@ erDiagram
     user_infos ||--o{ tasks : "1人で複数のタスクを保持可能"
     user_infos o|--o{ relationships : "follower"
     user_infos o|--o{ relationships : "followed"
+    user_infos o|--o{ break_relationships : "blocker"
+    user_infos o|--o{ break_relationships : "blocked"
     tasks ||--o{ fights : "1タスクで複数のファイトを保持可能"
     user_infos ||--o{ fights : "1人で複数のタスクにいいね可能"
     user_infos {
@@ -88,6 +93,14 @@ erDiagram
       timestamp created_at "作成日時"
       timestamp updated_at "更新日時"
     }
+    break_relationships {
+      int id PK
+      int blocker_id FK "ブロックする側"
+      int blocked_id  FK "ブロックされる側"
+      boolean block_now "ブロックフラグ"
+      timestamp created_at "作成日時"
+      timestamp updated_at "更新日時"
+    }
 ```
 
 ## 使用技術
@@ -104,6 +117,7 @@ Rails x Vue
 
 Twitter のクローンのようなアプリ開発を行っています。よって、Twitter で実装されている機能を作成していきたいと考えています。
 
-1. ブロック機能:ブロックしたユーザの投稿を非表示
-2. タスク固定機能: 自分が一番上に表示したい投稿を固定可能(しなくても良い)
-3. 引用機能: 他のユーザーの投稿を引用し、自分のタスクを作成
+1. ブロック機能:ブロックしたユーザの投稿を非表示(04/28 完)
+2. マイページ機能: マイページで Top 画像の設定、ブロックしてるユーザリストの表示が可能
+3. タスク固定機能: 自分が一番上に表示したい投稿を固定可能(しなくても良い)
+4. 引用機能: 他のユーザーの投稿を引用し、自分のタスクを作成

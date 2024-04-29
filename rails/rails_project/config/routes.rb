@@ -23,8 +23,8 @@ Rails.application.routes.draw do
     post '/follow', to: 'relation#create'
 
     # block_relation
-    get '/get_blocked_list/:blocker', to: 'block_relation#index'
-    post '/block', to: 'relation#create'
+    get '/get_blocked_list/:blocker_id', to: 'block_relation#index'
+    post '/block', to: 'block_relation#create'
     
     # fight
     get '/get_fight_task_list/:user_id', to: 'fight#index'

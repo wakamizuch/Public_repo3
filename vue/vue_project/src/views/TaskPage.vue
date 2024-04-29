@@ -58,20 +58,32 @@ export default {
     };
   },
   computed: {
-    taskCards() {
-      const blockedList = this.$store.getters["block/blockedList"];
-      const tasks = this.$store.getters.taskCards.filter(function (task) {
-        return !blockedList.includes(task.user_id);
-      });
-      return tasks;
+    taskCards: {
+      get: function () {
+        const blockedList = this.$store.getters["block/blockedList"];
+        const tasks = this.$store.getters.taskCards.filter(function (task) {
+          // return task.id > 0;
+          return !blockedList.includes(task.user_id);
+        });
+        return tasks;
+      },
+      set: function () {
+        return 0;
+      },
       //.filter(function (task) {
       //  return fightTaskList.includes(task.id);
       //})
       //this.$store.getters["block/blockedList"].includes(taskCard.user_id)
     },
+
     // blockも同じようにやってみたら良さそう
-    fightTaskList() {
-      return this.$store.getters["fight/fightTaskList"];
+    fightTaskList: {
+      get: function () {
+        return this.$store.getters["fight/fightTaskList"];
+      },
+      set: function () {
+        return 0;
+      },
     },
   },
   created() {
@@ -101,7 +113,7 @@ export default {
     },
 
     async loadTaskCards() {
-    //console.log("ロードされました(LoadTaskList)");
+      //console.log("ロードされました(LoadTaskList)");
       this.taskCards = await this.$store.dispatch("loadTaskCards", {});
     },
     async createTask() {

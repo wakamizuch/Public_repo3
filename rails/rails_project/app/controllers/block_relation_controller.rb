@@ -1,39 +1,42 @@
 class BlockRelationController < ApplicationController
   def index
-    pp index_params[:blocker]
-    puts "index始めます"
-    relation = BlockRelationship.where(
-      blocker_id: index_params[:blocker],
+    pp index_params[:blocker_id]
+    puts "ブロックの、index始めます"
+    block_relation = BlockRelationship.where(
+      blocker_id: index_params[:blocker_id],
       block_now: true,
     )
-    render_success blockedList:relation
+    render_success blockedList:block_relation
   end
 
+  # すでにあるなら　!現在　に変更
+  # ないなら、　trueにセットする
   def create
-    puts relation_params
-    relation = BlockRelationship.find_by(
-      follower_id: relation_params[:follower_id],
-      followed_id: relation_params[:followed_id],
+    puts block_relation_params
+    block_relation = BlockRelationship.find_by(
+      blocker_id: block_relation_params[:blocker_id],
+      blocked_id: block_relation_params[:blocked_id],
     )
     #もうすでにあるなら、アップデート
-    if relation!= nil
+    if block_relation!= nil
       puts "成功しました"
-      if relation.update(follow_now: !(relation.follow_now))
-        render_success relation:relation
+      if block_relation.update(block_now: !(block_relation.block_now))
+        pp block_relation
+        render_success blockedList:block_relation
       else
         render_error
       end
     else
       #ないなら新たに作成
       puts "新たに作成します"
-      relation = BlockRelationship.new(
-        follower_id: relation_params[:follower_id],
-        followed_id: relation_params[:followed_id],
-        follow_now: true,
+      block_relation = BlockRelationship.new(
+        blocker_id: block_relation_params[:blocker_id],
+        blocked_id: block_relation_params[:blocked_id],
+        block_now: true,
       )
-      if relation.save
+      if block_relation.save
         pp "うまくいけました"
-        render_success blockedList:relation
+        render_success blockedList:block_relation
       else
         render_error
       end
@@ -42,11 +45,11 @@ class BlockRelationController < ApplicationController
   end
   
   private
-  def relation_params
-    params.require(:relation).permit(:follower_id, :followed_id )
+  def block_relation_params
+    params.require(:block_relation).permit(:blocker_id, :blocked_id )
   end
   def index_params
-    params.permit(:blocker)
+    params.permit(:blocker_id)
   end
 
 end

@@ -150,12 +150,12 @@ export default {
       console.log(
         this.$store.getters.userId +
           "と" +
-          this.taskCard.id +
+          this.taskCard.user_id +
           "のブロック関係が変化しました"
       );
-      const blocker_id = this.$store.getters.userId;
-      const blocked_id = this.taskCard.user_id;
-      await this.$store.dispatch("block/block", { blocker_id, blocked_id });
+      const blockerId = this.$store.getters.userId;
+      const blockedId = this.taskCard.user_id;
+      await this.$store.dispatch("block/block", { blockerId, blockedId });
     },
   },
 };

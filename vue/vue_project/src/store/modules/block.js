@@ -11,26 +11,21 @@ export default {
     //ブロックされている人のリスト保持
     loadBlockedList({ commit }, { userId }) {
       api.get(`get_blocked_list/${userId}`).then(function ({ data }) {
-        console.log("次にブロックのセットです" + data);
+        console.log("次にブロックのセットです" + data.blockedList);
         commit("setBlockedList", { data });
       });
     },
     //最終的には、変更後にロードを呼び出すことになる
-    fight({ dispatch }, { userId, taskId }) {
+    block({ dispatch }, { blockerId, blockedId }) {
       const res = api
-        .post("fight", {
-          fight: { user_id: userId, task_id: taskId },
+        .post("block", {
+          block_relation: { blocker_id: blockerId, blocked_id: blockedId },
         })
         .then(function ({ data }) {
-          console.log(data.fight);
-          api
-            .post("updateFightNum", {
-              fight: data.fight,
-            })
-            .then(function ({ data }) {
-              console.log(data.task);
-              dispatch(`loadBlockedList`, { userId: userId });
-            });
+          console.log(data.blockedList);
+          dispatch("loadBlockedList", {
+            userId: blockerId,
+          });
         });
     },
   },
@@ -42,9 +37,10 @@ export default {
       const blockedList = [];
       //連想配列だからkey
       for (var key in data.blockedList) {
+        console.log(key+":  ", data.blockedList[key].blocked_id);
         blockedList.push(data.blockedList[key].blocked_id);
       }
-      console.log(blockedList);
+      console.log("結果はこんな感じです"+blockedList);
       state.blockedList = blockedList;
     },
   },
